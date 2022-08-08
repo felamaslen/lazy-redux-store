@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ComponentType } from "react";
+import { useDispatch } from "react-redux";
 
-function App() {
+import { actionA, actionB, actionC, actionLoadStore } from "./actions";
+import { useSelector } from "./useSelector";
+
+export const App: ComponentType = () => {
+  const dispatch = useDispatch();
+
+  const stateA = useSelector<string>((root) => root.appA?.stateA);
+  const stateB = useSelector<number>((root) => root.appB?.stateB);
+
+  const hasA = useSelector((root) => Reflect.has(root, "appA"));
+  const hasB = useSelector((root) => Reflect.has(root, "appB"));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        display: "flex",
+        flexFlow: "column",
+      }}
+    >
+      <table>
+        <thead>
+          <tr>
+            <th>State</th>
+            <th>Loaded</th>
+            <th>Value</th>
+          </tr>
+          <tr>
+            <td>A</td>
+            <td>{hasA ? "yes" : "no"}</td>
+            <td>{stateA}</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>{hasB ? "yes" : "no"}</td>
+            <td>{stateB}</td>
+          </tr>
+        </thead>
+      </table>
+      <button onClick={() => dispatch(actionLoadStore("appA"))}>Load A</button>
+      <button onClick={() => dispatch(actionLoadStore("appB"))}>Load B</button>
+      <button onClick={() => dispatch(actionA())}>Dispatch action A</button>
+      <button onClick={() => dispatch(actionB())}>Dispatch action B</button>
+      <button onClick={() => dispatch(actionC())}>Dispatch action C</button>
     </div>
   );
-}
-
-export default App;
+};
